@@ -10190,7 +10190,7 @@
           }
         },
         "deprecated": false,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "READ"
       }
     },
     "/rest/api/3/mypermissions": {
