@@ -631,7 +631,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/AttachmentMetadata"
                 },
-                "example": "{\"id\":10000,\"self\":\"https://your-domain.atlassian.net/rest/api/3/attachments/10000\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:41.140+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"https://your-domain.atlassian.net/jira/attachments/10000\",\"thumbnail\":\"https://your-domain.atlassian.net/jira/secure/thumbnail/10000\"}"
+                "example": "{\"id\":10000,\"self\":\"https://your-domain.atlassian.net/rest/api/3/attachments/10000\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:29.082+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"https://your-domain.atlassian.net/jira/attachments/10000\",\"thumbnail\":\"https://your-domain.atlassian.net/jira/secure/thumbnail/10000\"}"
               }
             }
           },
@@ -2787,7 +2787,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FieldDeprecated"
+                    "$ref": "#/components/schemas/FieldDetails"
                   }
                 },
                 "example": "[{\"id\":\"description\",\"name\":\"Description\",\"custom\":false,\"orderable\":true,\"navigable\":true,\"searchable\":true,\"clauseNames\":[\"description\"],\"schema\":{\"type\":\"string\",\"system\":\"description\"}},{\"id\":\"summary\",\"key\":\"summary\",\"name\":\"Summary\",\"custom\":false,\"orderable\":true,\"navigable\":true,\"searchable\":true,\"clauseNames\":[\"summary\"],\"schema\":{\"type\":\"string\",\"system\":\"summary\"}}]"
@@ -2843,7 +2843,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FieldDeprecated"
+                  "$ref": "#/components/schemas/FieldDetails"
                 },
                 "example": "{\"id\":\"customfield_10101\",\"key\":\"customfield_10101\",\"name\":\"New custom field\",\"custom\":true,\"orderable\":true,\"navigable\":true,\"searchable\":true,\"clauseNames\":[\"cf[10101]\",\"New custom field\"],\"schema\":{\"type\":\"project\",\"custom\":\"com.atlassian.jira.plugin.system.customfieldtypes:project\",\"customId\":10101}}"
               }
@@ -2874,7 +2874,7 @@
           "Issue custom field options"
         ],
         "summary": "Get fields paginated",
-        "description": "Returns a [paginated](#pagination) list of fields for Classic Jira projects. Only custom fields can be queried, `isCustom` must be set to `true`.\n\n**[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).",
+        "description": "Returns a [paginated](#pagination) list of fields for Classic Jira projects. Only custom fields can be queried, `type` must be set to `custom`.\n\n**[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).",
         "operationId": "com.atlassian.jira.rest.v2.issue.field.FieldSearchResource.getFieldsPaginated_get",
         "parameters": [
           {
@@ -2898,11 +2898,26 @@
             }
           },
           {
-            "name": "isCustom",
+            "name": "type",
             "in": "query",
-            "description": "Should endpoint return Custom Fields (true), System Fields (false), or both (unset)",
+            "description": "The type of fields to search.",
             "schema": {
-              "type": "boolean"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "custom",
+                  "system"
+                ]
+              }
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "String used to perform a case-insensitive partial match with field names.",
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -2922,7 +2937,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/PageBeanField"
                 },
-                "example": "{\"maxResults\":50,\"startAt\":0,\"total\":2,\"isLast\":false,\"values\":[{\"id\":\"customfield_10000\",\"name\":\"Approvers\",\"description\":\"Contains users needed for approval. This custom field was created by Jira Service Desk.\",\"key\":\"customfield_10000\",\"screens\":[{\"id\":\"10200\"},{\"id\":\"10201\"}],\"contexts\":[{\"id\":\"10100\"},{\"id\":\"10101\"}],\"lastUsed\":\"2019-09-12T10:10:00.916+0000\"},{\"id\":\"customfield_10001\",\"name\":\"Change reason\",\"description\":\"Choose the reason for the change request\",\"key\":\"customfield_10001\",\"screens\":[{\"id\":\"10204\"},{\"id\":\"10208\"}],\"contexts\":[{\"id\":\"10105\"},{\"id\":\"10109\"}]}]}"
+                "example": "{\"maxResults\":50,\"startAt\":0,\"total\":2,\"isLast\":false,\"values\":[{\"id\":\"customfield_10000\",\"name\":\"Approvers\",\"description\":\"Contains users needed for approval. This custom field was created by Jira Service Desk.\",\"key\":\"customfield_10000\",\"screens\":[{\"id\":\"10200\"},{\"id\":\"10201\"}],\"contexts\":[{\"id\":\"10100\"},{\"id\":\"10101\"}],\"lastUsed\":\"2019-09-12T10:10:00.159+0000\"},{\"id\":\"customfield_10001\",\"name\":\"Change reason\",\"description\":\"Choose the reason for the change request\",\"key\":\"customfield_10001\",\"screens\":[{\"id\":\"10204\"},{\"id\":\"10208\"}],\"contexts\":[{\"id\":\"10105\"},{\"id\":\"10109\"}]}]}"
               }
             }
           },
@@ -6263,6 +6278,7 @@
             ]
           }
         ],
+        "x-experimental": true,
         "x-atlassian-connect-scope": "WRITE"
       }
     },
@@ -6348,7 +6364,6 @@
             ]
           }
         ],
-        "x-experimental": true,
         "x-atlassian-connect-scope": "WRITE"
       },
       "delete": {
@@ -6502,7 +6517,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/IssueBean"
                 },
-                "example": "{\"id\":\"10002\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10002\",\"key\":\"ED-1\",\"fields\":{\"watcher\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/EX-1/watchers\",\"isWatching\":false,\"watchCount\":1,\"watchers\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false}]},\"attachment\":[{\"id\":10000,\"self\":\"https://your-domain.atlassian.net/rest/api/3/attachments/10000\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:41.140+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"https://your-domain.atlassian.net/jira/attachments/10000\",\"thumbnail\":\"https://your-domain.atlassian.net/jira/secure/thumbnail/10000\"}],\"sub-tasks\":[{\"id\":\"10000\",\"type\":{\"id\":\"10000\",\"name\":\"\",\"inward\":\"Parent\",\"outward\":\"Sub-task\"},\"outwardIssue\":{\"id\":\"10003\",\"key\":\"ED-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/ED-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"description\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Main order flow broken\"}]}]},\"project\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/project/EX\",\"id\":\"10000\",\"key\":\"EX\",\"name\":\"Example\",\"avatarUrls\":{\"48x48\":\"http://your-domain.atlassian.net/secure/projectavatar?size=large&pid=10000\",\"24x24\":\"http://your-domain.atlassian.net/secure/projectavatar?size=small&pid=10000\",\"16x16\":\"http://your-domain.atlassian.net/secure/projectavatar?size=xsmall&pid=10000\",\"32x32\":\"http://your-domain.atlassian.net/secure/projectavatar?size=medium&pid=10000\"},\"projectCategory\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/projectCategory/10000\",\"id\":\"10000\",\"name\":\"FIRST\",\"description\":\"First Project Category\"},\"simplified\":false,\"style\":\"classic\"},\"comment\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:39.761+0000\",\"updated\":\"2019-10-10T13:14:39.761+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}],\"issuelinks\":[{\"id\":\"10001\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"outwardIssue\":{\"id\":\"10004L\",\"key\":\"PR-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}},{\"id\":\"10002\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"inwardIssue\":{\"id\":\"10004\",\"key\":\"PR-3\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-3\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"worklog\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-10T13:14:40.105+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-10T13:14:40.105+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}],\"updated\":1,\"timetracking\":{\"originalEstimate\":\"10m\",\"remainingEstimate\":\"3m\",\"timeSpent\":\"6m\",\"originalEstimateSeconds\":600,\"remainingEstimateSeconds\":200,\"timeSpentSeconds\":400}}}"
+                "example": "{\"id\":\"10002\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10002\",\"key\":\"ED-1\",\"fields\":{\"watcher\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/EX-1/watchers\",\"isWatching\":false,\"watchCount\":1,\"watchers\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false}]},\"attachment\":[{\"id\":10000,\"self\":\"https://your-domain.atlassian.net/rest/api/3/attachments/10000\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:29.082+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"https://your-domain.atlassian.net/jira/attachments/10000\",\"thumbnail\":\"https://your-domain.atlassian.net/jira/secure/thumbnail/10000\"}],\"sub-tasks\":[{\"id\":\"10000\",\"type\":{\"id\":\"10000\",\"name\":\"\",\"inward\":\"Parent\",\"outward\":\"Sub-task\"},\"outwardIssue\":{\"id\":\"10003\",\"key\":\"ED-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/ED-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"description\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Main order flow broken\"}]}]},\"project\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/project/EX\",\"id\":\"10000\",\"key\":\"EX\",\"name\":\"Example\",\"avatarUrls\":{\"48x48\":\"http://your-domain.atlassian.net/secure/projectavatar?size=large&pid=10000\",\"24x24\":\"http://your-domain.atlassian.net/secure/projectavatar?size=small&pid=10000\",\"16x16\":\"http://your-domain.atlassian.net/secure/projectavatar?size=xsmall&pid=10000\",\"32x32\":\"http://your-domain.atlassian.net/secure/projectavatar?size=medium&pid=10000\"},\"projectCategory\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/projectCategory/10000\",\"id\":\"10000\",\"name\":\"FIRST\",\"description\":\"First Project Category\"},\"simplified\":false,\"style\":\"classic\"},\"comment\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:27.575+0000\",\"updated\":\"2019-10-16T05:34:27.575+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}],\"issuelinks\":[{\"id\":\"10001\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"outwardIssue\":{\"id\":\"10004L\",\"key\":\"PR-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}},{\"id\":\"10002\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"inwardIssue\":{\"id\":\"10004\",\"key\":\"PR-3\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-3\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"worklog\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-16T05:34:28.141+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-16T05:34:28.141+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}],\"updated\":1,\"timetracking\":{\"originalEstimate\":\"10m\",\"remainingEstimate\":\"3m\",\"timeSpent\":\"6m\",\"originalEstimateSeconds\":600,\"remainingEstimateSeconds\":200,\"timeSpentSeconds\":400}}}"
               }
             }
           },
@@ -6882,7 +6897,7 @@
                     "$ref": "#/components/schemas/Attachment"
                   }
                 },
-                "example": "[{\"self\":\"http://www.example.com/jira/rest/api/3/attachments/10000\",\"id\":\"10001\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"emailAddress\":\"mia@example.com\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":true,\"timeZone\":\"Australia/Sydney\"},\"created\":\"2019-10-10T13:14:43.021+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"http://www.example.com/jira/attachments/10000\",\"thumbnail\":\"http://www.example.com/jira/secure/thumbnail/10000\"},{\"self\":\"http://www.example.com/jira/rest/api/3/attachments/10001\",\"filename\":\"dbeuglog.txt\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"emailAddress\":\"mia@example.com\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":true,\"timeZone\":\"Australia/Sydney\"},\"created\":\"2019-10-10T13:14:43.021+0000\",\"size\":2460,\"mimeType\":\"text/plain\",\"content\":\"http://www.example.com/jira/attachments/10001\",\"thumbnail\":\"http://www.example.com/jira/secure/thumbnail/10002\"}]"
+                "example": "[{\"self\":\"http://www.example.com/jira/rest/api/3/attachments/10000\",\"id\":\"10001\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"emailAddress\":\"mia@example.com\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":true,\"timeZone\":\"Australia/Sydney\"},\"created\":\"2019-10-16T05:34:30.538+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"http://www.example.com/jira/attachments/10000\",\"thumbnail\":\"http://www.example.com/jira/secure/thumbnail/10000\"},{\"self\":\"http://www.example.com/jira/rest/api/3/attachments/10001\",\"filename\":\"dbeuglog.txt\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"emailAddress\":\"mia@example.com\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":true,\"timeZone\":\"Australia/Sydney\"},\"created\":\"2019-10-16T05:34:30.538+0000\",\"size\":2460,\"mimeType\":\"text/plain\",\"content\":\"http://www.example.com/jira/attachments/10001\",\"thumbnail\":\"http://www.example.com/jira/secure/thumbnail/10002\"}]"
               }
             }
           },
@@ -7048,7 +7063,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/PageOfComments"
                 },
-                "example": "{\"startAt\":0,\"maxResults\":1,\"total\":1,\"comments\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:39.761+0000\",\"updated\":\"2019-10-10T13:14:39.761+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}]}"
+                "example": "{\"startAt\":0,\"maxResults\":1,\"total\":1,\"comments\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:27.575+0000\",\"updated\":\"2019-10-16T05:34:27.575+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}]}"
               }
             }
           },
@@ -7141,7 +7156,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/Comment"
                 },
-                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:39.761+0000\",\"updated\":\"2019-10-10T13:14:39.761+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}"
+                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:27.575+0000\",\"updated\":\"2019-10-16T05:34:27.575+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}"
               }
             }
           },
@@ -7214,7 +7229,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/Comment"
                 },
-                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:39.761+0000\",\"updated\":\"2019-10-10T13:14:39.761+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}"
+                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:27.575+0000\",\"updated\":\"2019-10-16T05:34:27.575+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}"
               }
             }
           },
@@ -7313,7 +7328,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/Comment"
                 },
-                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:39.761+0000\",\"updated\":\"2019-10-10T13:14:39.761+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}"
+                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:27.575+0000\",\"updated\":\"2019-10-16T05:34:27.575+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}"
               }
             }
           },
@@ -8483,6 +8498,9 @@
           },
           "404": {
             "description": "Returned if the issue is not found or the user does not have permission to view it."
+          },
+          "409": {
+            "description": "Returned if there are conflicts with other modifications of the issue."
           }
         },
         "deprecated": false,
@@ -8889,7 +8907,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/PageOfWorklogs"
                 },
-                "example": "{\"startAt\":0,\"maxResults\":1,\"total\":1,\"worklogs\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-10T13:14:40.105+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-10T13:14:40.105+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}]}"
+                "example": "{\"startAt\":0,\"maxResults\":1,\"total\":1,\"worklogs\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-16T05:34:28.141+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-16T05:34:28.141+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}]}"
               }
             }
           },
@@ -9017,7 +9035,7 @@
                     }
                   ]
                 },
-                "started": "2019-10-10T13:14:40.104+0000"
+                "started": "2019-10-16T05:34:28.140+0000"
               }
             }
           },
@@ -9104,7 +9122,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/Worklog"
                 },
-                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-10T13:14:40.105+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-10T13:14:40.105+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}"
+                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-16T05:34:28.141+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-16T05:34:28.141+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}"
               }
             }
           },
@@ -9233,7 +9251,7 @@
                     }
                   ]
                 },
-                "started": "2019-10-10T13:14:40.104+0000"
+                "started": "2019-10-16T05:34:28.140+0000"
               }
             }
           },
@@ -9247,7 +9265,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/Worklog"
                 },
-                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-10T13:14:40.105+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-10T13:14:40.105+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}"
+                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-16T05:34:28.141+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-16T05:34:28.141+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}"
               }
             }
           },
@@ -13669,7 +13687,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/PageBeanComponentWithIssueCount"
                 },
-                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/project/PR/component?startAt=0&maxResults=2\",\"nextPage\":\"http://your-domain.atlassian.net/rest/api/3/project/PR/component?startAt=2&maxResults=2\",\"maxResults\":2,\"startAt\":0,\"total\":7,\"isLast\":false,\"values\":[{\"componentBean\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/component/10000\",\"id\":\"10000\",\"name\":\"Component 1\",\"description\":\"This is a Jira component\",\"lead\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"assigneeType\":\"PROJECT_LEAD\",\"assignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"realAssigneeType\":\"PROJECT_LEAD\",\"realAssignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"isAssigneeTypeValid\":false,\"project\":\"HSP\",\"projectId\":10000},\"issueCount\":1,\"self\":\"http://your-domain.atlassian.net/rest/api/3/component/10000\",\"description\":\"This is a Jira component\",\"project\":\"HSP\",\"projectId\":10000,\"assignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"lead\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"assigneeType\":\"PROJECT_LEAD\",\"realAssignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"realAssigneeType\":\"PROJECT_LEAD\",\"isAssigneeTypeValid\":false,\"name\":\"Component 1\",\"id\":\"10000\"},{\"componentBean\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/component/10000\",\"id\":\"10050\",\"name\":\"PXA\",\"description\":\"This is a another Jira component\",\"lead\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"assigneeType\":\"PROJECT_LEAD\",\"assignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"realAssigneeType\":\"PROJECT_LEAD\",\"realAssignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"isAssigneeTypeValid\":false,\"project\":\"PROJECTKEY\",\"projectId\":10000},\"issueCount\":5,\"self\":\"http://your-domain.atlassian.net/rest/api/3/component/10000\",\"description\":\"This is a another Jira component\",\"project\":\"PROJECTKEY\",\"projectId\":10000,\"assignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"lead\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"assigneeType\":\"PROJECT_LEAD\",\"realAssignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"realAssigneeType\":\"PROJECT_LEAD\",\"isAssigneeTypeValid\":false,\"name\":\"PXA\",\"id\":\"10050\"}]}"
+                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/project/PR/component?startAt=0&maxResults=2\",\"nextPage\":\"http://your-domain.atlassian.net/rest/api/3/project/PR/component?startAt=2&maxResults=2\",\"maxResults\":2,\"startAt\":0,\"total\":7,\"isLast\":false,\"values\":[{\"componentBean\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/component/10000\",\"id\":\"10000\",\"name\":\"Component 1\",\"description\":\"This is a Jira component\",\"lead\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"assigneeType\":\"PROJECT_LEAD\",\"assignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"realAssigneeType\":\"PROJECT_LEAD\",\"realAssignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"isAssigneeTypeValid\":false,\"project\":\"HSP\",\"projectId\":10000},\"issueCount\":1,\"description\":\"This is a Jira component\",\"project\":\"HSP\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/component/10000\",\"lead\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"assigneeType\":\"PROJECT_LEAD\",\"assignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"projectId\":10000,\"realAssignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"isAssigneeTypeValid\":false,\"realAssigneeType\":\"PROJECT_LEAD\",\"name\":\"Component 1\",\"id\":\"10000\"},{\"componentBean\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/component/10000\",\"id\":\"10050\",\"name\":\"PXA\",\"description\":\"This is a another Jira component\",\"lead\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"assigneeType\":\"PROJECT_LEAD\",\"assignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"realAssigneeType\":\"PROJECT_LEAD\",\"realAssignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"isAssigneeTypeValid\":false,\"project\":\"PROJECTKEY\",\"projectId\":10000},\"issueCount\":5,\"description\":\"This is a another Jira component\",\"project\":\"PROJECTKEY\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/component/10000\",\"lead\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"assigneeType\":\"PROJECT_LEAD\",\"assignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"projectId\":10000,\"realAssignee\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"isAssigneeTypeValid\":false,\"realAssigneeType\":\"PROJECT_LEAD\",\"name\":\"PXA\",\"id\":\"10050\"}]}"
               }
             }
           },
@@ -14913,7 +14931,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/HierarchyOutputFragment"
                 },
-                "example": "{\"projectId\":10030,\"hierarchy\":[{\"entityId\":\"0bc84786-f5f6-4914-b033-c6350f554a8c\",\"level\":0,\"name\":\"Standard Issue Types\",\"issueTypes\":[{\"id\":7,\"name\":\"Story\",\"avatarId\":10324}]}]}"
+                "example": "{\"projectId\":10030,\"hierarchy\":[{\"entityId\":\"957f02c0-6607-4dd7-8b9e-76a72d507b9c\",\"level\":0,\"name\":\"Standard Issue Types\",\"issueTypes\":[{\"id\":7,\"name\":\"Story\",\"avatarId\":10324}]}]}"
               }
             }
           },
@@ -17230,7 +17248,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/SearchResults"
                 },
-                "example": "{\"expand\":\"names,schema\",\"startAt\":0,\"maxResults\":50,\"total\":1,\"issues\":[{\"expand\":\"\",\"id\":\"10002\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10002\",\"key\":\"ED-1\",\"fields\":{\"watcher\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/EX-1/watchers\",\"isWatching\":false,\"watchCount\":1,\"watchers\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false}]},\"attachment\":[{\"id\":10000,\"self\":\"https://your-domain.atlassian.net/rest/api/3/attachments/10000\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:41.140+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"https://your-domain.atlassian.net/jira/attachments/10000\",\"thumbnail\":\"https://your-domain.atlassian.net/jira/secure/thumbnail/10000\"}],\"sub-tasks\":[{\"id\":\"10000\",\"type\":{\"id\":\"10000\",\"name\":\"\",\"inward\":\"Parent\",\"outward\":\"Sub-task\"},\"outwardIssue\":{\"id\":\"10003\",\"key\":\"ED-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/ED-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"description\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Main order flow broken\"}]}]},\"project\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/project/EX\",\"id\":\"10000\",\"key\":\"EX\",\"name\":\"Example\",\"avatarUrls\":{\"48x48\":\"http://your-domain.atlassian.net/secure/projectavatar?size=large&pid=10000\",\"24x24\":\"http://your-domain.atlassian.net/secure/projectavatar?size=small&pid=10000\",\"16x16\":\"http://your-domain.atlassian.net/secure/projectavatar?size=xsmall&pid=10000\",\"32x32\":\"http://your-domain.atlassian.net/secure/projectavatar?size=medium&pid=10000\"},\"projectCategory\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/projectCategory/10000\",\"id\":\"10000\",\"name\":\"FIRST\",\"description\":\"First Project Category\"},\"simplified\":false,\"style\":\"classic\"},\"comment\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:39.761+0000\",\"updated\":\"2019-10-10T13:14:39.761+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}],\"issuelinks\":[{\"id\":\"10001\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"outwardIssue\":{\"id\":\"10004L\",\"key\":\"PR-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}},{\"id\":\"10002\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"inwardIssue\":{\"id\":\"10004\",\"key\":\"PR-3\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-3\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"worklog\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-10T13:14:40.105+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-10T13:14:40.105+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}],\"updated\":1,\"timetracking\":{\"originalEstimate\":\"10m\",\"remainingEstimate\":\"3m\",\"timeSpent\":\"6m\",\"originalEstimateSeconds\":600,\"remainingEstimateSeconds\":200,\"timeSpentSeconds\":400}}}],\"warningMessages\":[\"The value 'bar' does not exist for the field 'foo'.\"]}"
+                "example": "{\"expand\":\"names,schema\",\"startAt\":0,\"maxResults\":50,\"total\":1,\"issues\":[{\"expand\":\"\",\"id\":\"10002\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10002\",\"key\":\"ED-1\",\"fields\":{\"watcher\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/EX-1/watchers\",\"isWatching\":false,\"watchCount\":1,\"watchers\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false}]},\"attachment\":[{\"id\":10000,\"self\":\"https://your-domain.atlassian.net/rest/api/3/attachments/10000\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:29.082+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"https://your-domain.atlassian.net/jira/attachments/10000\",\"thumbnail\":\"https://your-domain.atlassian.net/jira/secure/thumbnail/10000\"}],\"sub-tasks\":[{\"id\":\"10000\",\"type\":{\"id\":\"10000\",\"name\":\"\",\"inward\":\"Parent\",\"outward\":\"Sub-task\"},\"outwardIssue\":{\"id\":\"10003\",\"key\":\"ED-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/ED-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"description\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Main order flow broken\"}]}]},\"project\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/project/EX\",\"id\":\"10000\",\"key\":\"EX\",\"name\":\"Example\",\"avatarUrls\":{\"48x48\":\"http://your-domain.atlassian.net/secure/projectavatar?size=large&pid=10000\",\"24x24\":\"http://your-domain.atlassian.net/secure/projectavatar?size=small&pid=10000\",\"16x16\":\"http://your-domain.atlassian.net/secure/projectavatar?size=xsmall&pid=10000\",\"32x32\":\"http://your-domain.atlassian.net/secure/projectavatar?size=medium&pid=10000\"},\"projectCategory\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/projectCategory/10000\",\"id\":\"10000\",\"name\":\"FIRST\",\"description\":\"First Project Category\"},\"simplified\":false,\"style\":\"classic\"},\"comment\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:27.575+0000\",\"updated\":\"2019-10-16T05:34:27.575+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}],\"issuelinks\":[{\"id\":\"10001\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"outwardIssue\":{\"id\":\"10004L\",\"key\":\"PR-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}},{\"id\":\"10002\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"inwardIssue\":{\"id\":\"10004\",\"key\":\"PR-3\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-3\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"worklog\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-16T05:34:28.141+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-16T05:34:28.141+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}],\"updated\":1,\"timetracking\":{\"originalEstimate\":\"10m\",\"remainingEstimate\":\"3m\",\"timeSpent\":\"6m\",\"originalEstimateSeconds\":600,\"remainingEstimateSeconds\":200,\"timeSpentSeconds\":400}}}],\"warningMessages\":[\"The value 'bar' does not exist for the field 'foo'.\"]}"
               }
             }
           },
@@ -17298,7 +17316,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/SearchResults"
                 },
-                "example": "{\"expand\":\"names,schema\",\"startAt\":0,\"maxResults\":50,\"total\":1,\"issues\":[{\"expand\":\"\",\"id\":\"10002\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10002\",\"key\":\"ED-1\",\"fields\":{\"watcher\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/EX-1/watchers\",\"isWatching\":false,\"watchCount\":1,\"watchers\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false}]},\"attachment\":[{\"id\":10000,\"self\":\"https://your-domain.atlassian.net/rest/api/3/attachments/10000\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:41.140+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"https://your-domain.atlassian.net/jira/attachments/10000\",\"thumbnail\":\"https://your-domain.atlassian.net/jira/secure/thumbnail/10000\"}],\"sub-tasks\":[{\"id\":\"10000\",\"type\":{\"id\":\"10000\",\"name\":\"\",\"inward\":\"Parent\",\"outward\":\"Sub-task\"},\"outwardIssue\":{\"id\":\"10003\",\"key\":\"ED-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/ED-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"description\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Main order flow broken\"}]}]},\"project\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/project/EX\",\"id\":\"10000\",\"key\":\"EX\",\"name\":\"Example\",\"avatarUrls\":{\"48x48\":\"http://your-domain.atlassian.net/secure/projectavatar?size=large&pid=10000\",\"24x24\":\"http://your-domain.atlassian.net/secure/projectavatar?size=small&pid=10000\",\"16x16\":\"http://your-domain.atlassian.net/secure/projectavatar?size=xsmall&pid=10000\",\"32x32\":\"http://your-domain.atlassian.net/secure/projectavatar?size=medium&pid=10000\"},\"projectCategory\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/projectCategory/10000\",\"id\":\"10000\",\"name\":\"FIRST\",\"description\":\"First Project Category\"},\"simplified\":false,\"style\":\"classic\"},\"comment\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-10T13:14:39.761+0000\",\"updated\":\"2019-10-10T13:14:39.761+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}],\"issuelinks\":[{\"id\":\"10001\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"outwardIssue\":{\"id\":\"10004L\",\"key\":\"PR-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}},{\"id\":\"10002\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"inwardIssue\":{\"id\":\"10004\",\"key\":\"PR-3\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-3\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"worklog\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-10T13:14:40.105+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-10T13:14:40.105+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}],\"updated\":1,\"timetracking\":{\"originalEstimate\":\"10m\",\"remainingEstimate\":\"3m\",\"timeSpent\":\"6m\",\"originalEstimateSeconds\":600,\"remainingEstimateSeconds\":200,\"timeSpentSeconds\":400}}}],\"warningMessages\":[\"The value 'bar' does not exist for the field 'foo'.\"]}"
+                "example": "{\"expand\":\"names,schema\",\"startAt\":0,\"maxResults\":50,\"total\":1,\"issues\":[{\"expand\":\"\",\"id\":\"10002\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10002\",\"key\":\"ED-1\",\"fields\":{\"watcher\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/EX-1/watchers\",\"isWatching\":false,\"watchCount\":1,\"watchers\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false}]},\"attachment\":[{\"id\":10000,\"self\":\"https://your-domain.atlassian.net/rest/api/3/attachments/10000\",\"filename\":\"picture.jpg\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"key\":\"\",\"accountId\":\"5b10a2844c20165700ede21g\",\"name\":\"\",\"avatarUrls\":{\"48x48\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=48&s=48\",\"24x24\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=24&s=24\",\"16x16\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=16&s=16\",\"32x32\":\"https://avatar-management--avatars.server-location.prod.public.atl-paas.net/initials/MK-5.png?size=32&s=32\"},\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:29.082+0000\",\"size\":23123,\"mimeType\":\"image/jpeg\",\"content\":\"https://your-domain.atlassian.net/jira/attachments/10000\",\"thumbnail\":\"https://your-domain.atlassian.net/jira/secure/thumbnail/10000\"}],\"sub-tasks\":[{\"id\":\"10000\",\"type\":{\"id\":\"10000\",\"name\":\"\",\"inward\":\"Parent\",\"outward\":\"Sub-task\"},\"outwardIssue\":{\"id\":\"10003\",\"key\":\"ED-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/ED-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"description\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Main order flow broken\"}]}]},\"project\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/project/EX\",\"id\":\"10000\",\"key\":\"EX\",\"name\":\"Example\",\"avatarUrls\":{\"48x48\":\"http://your-domain.atlassian.net/secure/projectavatar?size=large&pid=10000\",\"24x24\":\"http://your-domain.atlassian.net/secure/projectavatar?size=small&pid=10000\",\"16x16\":\"http://your-domain.atlassian.net/secure/projectavatar?size=xsmall&pid=10000\",\"32x32\":\"http://your-domain.atlassian.net/secure/projectavatar?size=medium&pid=10000\"},\"projectCategory\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/projectCategory/10000\",\"id\":\"10000\",\"name\":\"FIRST\",\"description\":\"First Project Category\"},\"simplified\":false,\"style\":\"classic\"},\"comment\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/comment/10000\",\"id\":\"10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"body\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.\"}]}]},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"created\":\"2019-10-16T05:34:27.575+0000\",\"updated\":\"2019-10-16T05:34:27.575+0000\",\"visibility\":{\"type\":\"role\",\"value\":\"Administrators\"}}],\"issuelinks\":[{\"id\":\"10001\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"outwardIssue\":{\"id\":\"10004L\",\"key\":\"PR-2\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-2\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}},{\"id\":\"10002\",\"type\":{\"id\":\"10000\",\"name\":\"Dependent\",\"inward\":\"depends on\",\"outward\":\"is depended by\"},\"inwardIssue\":{\"id\":\"10004\",\"key\":\"PR-3\",\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/PR-3\",\"fields\":{\"status\":{\"iconUrl\":\"http://your-domain.atlassian.net/images/icons/statuses/open.png\",\"name\":\"Open\"}}}}],\"worklog\":[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-16T05:34:28.141+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-16T05:34:28.141+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}],\"updated\":1,\"timetracking\":{\"originalEstimate\":\"10m\",\"remainingEstimate\":\"3m\",\"timeSpent\":\"6m\",\"originalEstimateSeconds\":600,\"remainingEstimateSeconds\":200,\"timeSpentSeconds\":400}}}],\"warningMessages\":[\"The value 'bar' does not exist for the field 'foo'.\"]}"
               }
             }
           },
@@ -17394,7 +17412,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/ServerInformation"
                 },
-                "example": "{\"baseUrl\":\"http://your-domain.atlassian.net/jira\",\"version\":\"1001.0.0-SNAPSHOT\",\"versionNumbers\":[5,0,0],\"buildNumber\":582,\"buildDate\":\"2019-10-10T13:14:45.402+0000\",\"serverTime\":\"2019-10-10T13:14:45.402+0000\",\"scmInfo\":\"1f51473f5c7b75c1a69a0090f4832cdc5053702a\",\"serverTitle\":\"My Jira instance\",\"defaultLocale\":{\"locale\":\"en_AU\"}}"
+                "example": "{\"baseUrl\":\"http://your-domain.atlassian.net/jira\",\"version\":\"1001.0.0-SNAPSHOT\",\"versionNumbers\":[5,0,0],\"buildNumber\":582,\"buildDate\":\"2019-10-16T05:34:26.131+0000\",\"serverTime\":\"2019-10-16T05:34:26.131+0000\",\"scmInfo\":\"1f51473f5c7b75c1a69a0090f4832cdc5053702a\",\"serverTitle\":\"My Jira instance\",\"defaultLocale\":{\"locale\":\"en_AU\"}}"
               }
             }
           },
@@ -17735,7 +17753,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/TaskProgressBeanObject"
                 },
-                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/task/1\",\"id\":\"1\",\"description\":\"Task description\",\"status\":\"COMPLETE\",\"result\":\"the task result, this may be any JSON\",\"submittedBy\":10000,\"progress\":100,\"elapsedRuntime\":156,\"submitted\":1570713277511,\"started\":1570713277636,\"finished\":1570713277736,\"lastUpdate\":1570713277736}"
+                "example": "{\"self\":\"http://your-domain.atlassian.net/rest/api/3/task/1\",\"id\":\"1\",\"description\":\"Task description\",\"status\":\"COMPLETE\",\"result\":\"the task result, this may be any JSON\",\"submittedBy\":10000,\"progress\":100,\"elapsedRuntime\":156,\"submitted\":1571204065774,\"started\":1571204065894,\"finished\":1571204065994,\"lastUpdate\":1571204065994}"
               }
             }
           },
@@ -19646,7 +19664,7 @@
           "User search"
         ],
         "summary": "Find users",
-        "description": "Returns a list of users that match the provided search string and property.\n\nThis operation can be accessed anonymously.\n\n**[Permissions](#permissions) required:** *Browse users and groups* [global permission](https://confluence.atlassian.com/x/x4dKLg). Anonymous calls or calls by users without the required permission return empty search results.\n\n**Note:** This API is designed to return a small number of users with a flexible search query. As such, the sum of `startAt` and `maxResults` must be less than 1000. If the sum is greater, only results up to the 1000th result will be returned. If you wish to get a larger number of users, please use the get-all-users API (`/rest/api/3/users/search`) instead.",
+        "description": "Returns a list of users that match the search string and property.\n\nThis operation takes the users in the range defined by `startAt` and `maxResults`, up to the thousandth user, and then returns only the users from that range that match the search string and property. This means the operation usually returns fewer users than specified in `maxResults`. To get a larger number of users, use [Get all users](#api-rest-api-3-users-search-get) and filter the records in your code.\n\nThis operation can be accessed anonymously.\n\n**[Permissions](#permissions) required:** *Browse users and groups* [global permission](https://confluence.atlassian.com/x/x4dKLg). Anonymous calls or calls by users without the required permission return empty search results.",
         "operationId": "com.atlassian.jira.rest.v2.issue.UserResource.findUsers_get",
         "parameters": [
           {
@@ -23433,7 +23451,7 @@
                     "$ref": "#/components/schemas/Worklog"
                   }
                 },
-                "example": "[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-10T13:14:40.105+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-10T13:14:40.105+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}]"
+                "example": "[{\"self\":\"http://your-domain.atlassian.net/rest/api/3/issue/10010/worklog/10000\",\"author\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"updateAuthor\":{\"self\":\"http://your-domain.atlassian.net/rest/api/3/user?accountId=5b10a2844c20165700ede21g\",\"accountId\":\"5b10a2844c20165700ede21g\",\"displayName\":\"Mia Krystof\",\"active\":false},\"comment\":{\"type\":\"doc\",\"version\":1,\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"I did some work here.\"}]}]},\"updated\":\"2019-10-16T05:34:28.141+0000\",\"visibility\":{\"type\":\"group\",\"value\":\"jira-developers\"},\"started\":\"2019-10-16T05:34:28.141+0000\",\"timeSpent\":\"3h 20m\",\"timeSpentSeconds\":12000,\"id\":\"100028\",\"issueId\":\"10002\"}]"
               }
             }
           },
@@ -24036,7 +24054,7 @@
             "description": "The custom user or group field.",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FieldDeprecated"
+                "$ref": "#/components/schemas/FieldDetails"
               }
             ]
           },
@@ -24492,6 +24510,30 @@
         },
         "additionalProperties": false
       },
+      "SimpleErrorCollection": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "The list of errors by parameter returned by the operation. For example,\"projectKey\": \"Project keys must start with an uppercase letter, followed by one or more uppercase alphanumeric characters.\""
+          },
+          "errorMessages": {
+            "type": "array",
+            "description": "The list of error messages produced by this operation. For example, \"input parameter 'key' must be provided\"",
+            "items": {
+              "type": "string"
+            }
+          },
+          "httpStatusCode": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "IssuesAndJQLQueries": {
         "required": [
           "issueIds",
@@ -24520,30 +24562,6 @@
         },
         "additionalProperties": false,
         "description": "List of issues and JQL queries."
-      },
-      "SimpleErrorCollection": {
-        "type": "object",
-        "properties": {
-          "errors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "The list of errors by parameter returned by the operation. For example,\"projectKey\": \"Project keys must start with an uppercase letter, followed by one or more uppercase alphanumeric characters.\""
-          },
-          "errorMessages": {
-            "type": "array",
-            "description": "The list of error messages produced by this operation. For example, \"input parameter 'key' must be provided\"",
-            "items": {
-              "type": "string"
-            }
-          },
-          "httpStatusCode": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
       },
       "Workflow": {
         "required": [
@@ -24828,6 +24846,10 @@
               "classic",
               "next-gen"
             ]
+          },
+          "favourite": {
+            "type": "boolean",
+            "description": "Indicates whether the project is selected as a favorite."
           },
           "isPrivate": {
             "type": "boolean",
@@ -25285,6 +25307,68 @@
         },
         "additionalProperties": false,
         "description": "Details of a custom field option."
+      },
+      "FieldDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the field."
+          },
+          "key": {
+            "type": "string",
+            "description": "The key of the field."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the field."
+          },
+          "custom": {
+            "type": "boolean",
+            "description": "Indicates whether the field is a custom field."
+          },
+          "orderable": {
+            "type": "boolean",
+            "description": "Indicates whether the content of the field can be used to order lists."
+          },
+          "navigable": {
+            "type": "boolean",
+            "description": "Indicates whether the field can be used as a column on the issue navigator."
+          },
+          "searchable": {
+            "type": "boolean",
+            "description": "Indicates whether the content of the field can be searched."
+          },
+          "clauseNames": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "The names that can be used to reference the field in an advanced search. For more information, see [Advanced searching - fields reference](https://confluence.atlassian.com/x/gwORLQ).",
+            "items": {
+              "type": "string"
+            }
+          },
+          "scope": {
+            "description": "The scope of the field.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Scope"
+              }
+            ]
+          },
+          "schema": {
+            "description": "The data schema for the field.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonTypeBean"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "Details about a field.",
+        "xml": {
+          "name": "field"
+        }
       },
       "CreateUpdateRoleRequestBean": {
         "type": "object",
@@ -25838,20 +25922,6 @@
         "additionalProperties": false,
         "description": "Bulk issue property update request details."
       },
-      "MoveAllActorsBean": {
-        "type": "object",
-        "properties": {
-          "sourceProjectRoleId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "destProjectRoleId": {
-            "type": "integer",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false
-      },
       "PermissionsKeysBean": {
         "required": [
           "permissions"
@@ -25864,6 +25934,20 @@
             "items": {
               "type": "string"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveAllActorsBean": {
+        "type": "object",
+        "properties": {
+          "sourceProjectRoleId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "destProjectRoleId": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -26206,6 +26290,26 @@
         },
         "additionalProperties": false
       },
+      "WorkflowTransition": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The transition ID.",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "description": "The transition name."
+          }
+        },
+        "additionalProperties": false,
+        "description": "A workflow transition."
+      },
       "JexpJqlIssues": {
         "type": "object",
         "properties": {
@@ -26236,26 +26340,6 @@
         },
         "additionalProperties": false,
         "description": "The JQL specifying the issues available in the evaluated Jira expression under the `issues` context variable. Not all issues returned by the JQL query will be loaded, but only a portion of them, as described by the `startAt` and `maxResults` properties. Iterate over pages by inspecting the meta data included in the response."
-      },
-      "WorkflowTransition": {
-        "required": [
-          "id",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "The transition ID.",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "description": "The transition name."
-          }
-        },
-        "additionalProperties": false,
-        "description": "A workflow transition."
       },
       "Webhook": {
         "required": [
@@ -26373,27 +26457,6 @@
         "additionalProperties": false,
         "description": "The wrapper for the issue creation metadata for a list of projects."
       },
-      "MoveFieldBean": {
-        "type": "object",
-        "properties": {
-          "after": {
-            "type": "string",
-            "description": "The ID of the screen tab field after which to place the moved screen tab field. Required if `position` isn't provided.",
-            "format": "uri"
-          },
-          "position": {
-            "type": "string",
-            "description": "The named position to which the screen tab field should be moved. Required if `after` isn't provided.",
-            "enum": [
-              "Earlier",
-              "Later",
-              "First",
-              "Last"
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "UserPermission": {
         "type": "object",
         "properties": {
@@ -26432,6 +26495,27 @@
         },
         "additionalProperties": true,
         "description": "Details of a permission and its availability to a user."
+      },
+      "MoveFieldBean": {
+        "type": "object",
+        "properties": {
+          "after": {
+            "type": "string",
+            "description": "The ID of the screen tab field after which to place the moved screen tab field. Required if `position` isn't provided.",
+            "format": "uri"
+          },
+          "position": {
+            "type": "string",
+            "description": "The named position to which the screen tab field should be moved. Required if `after` isn't provided.",
+            "enum": [
+              "Earlier",
+              "Later",
+              "First",
+              "Last"
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "GroupName": {
         "type": "object",
@@ -26696,27 +26780,6 @@
         "additionalProperties": false,
         "description": "Details of an item associated with the changed record."
       },
-      "IssueLinkTypes": {
-        "type": "object",
-        "properties": {
-          "issueLinkTypes": {
-            "type": "array",
-            "description": "The issue link type bean.",
-            "readOnly": true,
-            "xml": {
-              "name": "issueLinkTypes"
-            },
-            "items": {
-              "$ref": "#/components/schemas/IssueLinkType"
-            }
-          }
-        },
-        "additionalProperties": false,
-        "description": "A list of issue link type beans.",
-        "xml": {
-          "name": "issueLinkTypes"
-        }
-      },
       "Dashboard": {
         "type": "object",
         "properties": {
@@ -26781,6 +26844,27 @@
         },
         "additionalProperties": false,
         "description": "Details of a dashboard."
+      },
+      "IssueLinkTypes": {
+        "type": "object",
+        "properties": {
+          "issueLinkTypes": {
+            "type": "array",
+            "description": "The issue link type bean.",
+            "readOnly": true,
+            "xml": {
+              "name": "issueLinkTypes"
+            },
+            "items": {
+              "$ref": "#/components/schemas/IssueLinkType"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "A list of issue link type beans.",
+        "xml": {
+          "name": "issueLinkTypes"
+        }
       },
       "Attachment": {
         "type": "object",
@@ -27276,6 +27360,49 @@
         },
         "description": "A time predicate for a temporal JQL clause."
       },
+      "BulkPermissionsRequestBean": {
+        "type": "object",
+        "properties": {
+          "projectPermissions": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Project permissions with associated projects and issues to look up.",
+            "items": {
+              "$ref": "#/components/schemas/BulkProjectPermissions"
+            }
+          },
+          "globalPermissions": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Global permissions to look up.",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "Details of global permissions to look up and project permissions with associated projects and issues to look up."
+      },
+      "ScreenableTab": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The ID of the screen tab.",
+            "format": "int64",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the screen tab. Required on create and update. The maximum length is 255 characters."
+          }
+        },
+        "additionalProperties": false,
+        "description": "A screen tab."
+      },
       "SecurityLevel": {
         "type": "object",
         "properties": {
@@ -27302,49 +27429,6 @@
         },
         "additionalProperties": false,
         "description": "Details of an issue level security item."
-      },
-      "ScreenableTab": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "The ID of the screen tab.",
-            "format": "int64",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the screen tab. Required on create and update. The maximum length is 255 characters."
-          }
-        },
-        "additionalProperties": false,
-        "description": "A screen tab."
-      },
-      "BulkPermissionsRequestBean": {
-        "type": "object",
-        "properties": {
-          "projectPermissions": {
-            "uniqueItems": true,
-            "type": "array",
-            "description": "Project permissions with associated projects and issues to look up.",
-            "items": {
-              "$ref": "#/components/schemas/BulkProjectPermissions"
-            }
-          },
-          "globalPermissions": {
-            "uniqueItems": true,
-            "type": "array",
-            "description": "Global permissions to look up.",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "additionalProperties": false,
-        "description": "Details of global permissions to look up and project permissions with associated projects and issues to look up."
       },
       "Permissions": {
         "type": "object",
@@ -28266,26 +28350,6 @@
         "additionalProperties": false,
         "description": "Details of a field."
       },
-      "RegisteredWebhook": {
-        "type": "object",
-        "properties": {
-          "createdWebhookId": {
-            "type": "integer",
-            "description": "The ID of the webhook. Returned if the webhook is created.",
-            "format": "int64"
-          },
-          "errors": {
-            "type": "array",
-            "description": "Error messages specifying why the webhook creation failed.",
-            "items": {
-              "type": "string",
-              "description": "Error messages specifying why the webhook creation failed."
-            }
-          }
-        },
-        "additionalProperties": false,
-        "description": "ID of a registered webhook or error messages explaining why a webhook wasn't registered."
-      },
       "ServerInformation": {
         "type": "object",
         "properties": {
@@ -28342,6 +28406,26 @@
         },
         "additionalProperties": false,
         "description": "Details about the Jira instance."
+      },
+      "RegisteredWebhook": {
+        "type": "object",
+        "properties": {
+          "createdWebhookId": {
+            "type": "integer",
+            "description": "The ID of the webhook. Returned if the webhook is created.",
+            "format": "int64"
+          },
+          "errors": {
+            "type": "array",
+            "description": "Error messages specifying why the webhook creation failed.",
+            "items": {
+              "type": "string",
+              "description": "Error messages specifying why the webhook creation failed."
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "ID of a registered webhook or error messages explaining why a webhook wasn't registered."
       },
       "CustomFieldOption": {
         "type": "object",
@@ -28591,56 +28675,22 @@
         "additionalProperties": false,
         "description": "A page containing dashboard details."
       },
-      "PageBeanString": {
+      "JqlQueryOrderByClause": {
+        "required": [
+          "fields"
+        ],
         "type": "object",
         "properties": {
-          "self": {
-            "type": "string",
-            "description": "The URL of the page.",
-            "format": "uri",
-            "readOnly": true
-          },
-          "nextPage": {
-            "type": "string",
-            "description": "If there is another page of results, the URL of the next page.",
-            "format": "uri",
-            "readOnly": true
-          },
-          "maxResults": {
-            "type": "integer",
-            "description": "The maximum number of items that could be returned.",
-            "format": "int32",
-            "readOnly": true
-          },
-          "startAt": {
-            "type": "integer",
-            "description": "The index of the first item returned.",
-            "format": "int64",
-            "readOnly": true
-          },
-          "total": {
-            "type": "integer",
-            "description": "The number of items returned.",
-            "format": "int64",
-            "readOnly": true
-          },
-          "isLast": {
-            "type": "boolean",
-            "description": "Indicates whether this is the last page.",
-            "readOnly": true
-          },
-          "values": {
+          "fields": {
             "type": "array",
-            "description": "The list of items.",
-            "readOnly": true,
+            "description": "The list of order-by clause fields and their ordering directives.",
             "items": {
-              "type": "string",
-              "readOnly": true
+              "$ref": "#/components/schemas/JqlQueryOrderByClauseElement"
             }
           }
         },
         "additionalProperties": false,
-        "description": "A page of items."
+        "description": "Details of the order-by JQL clause."
       },
       "JiraExpressionEvalContextBean": {
         "type": "object",
@@ -28692,22 +28742,56 @@
         },
         "additionalProperties": false
       },
-      "JqlQueryOrderByClause": {
-        "required": [
-          "fields"
-        ],
+      "PageBeanString": {
         "type": "object",
         "properties": {
-          "fields": {
+          "self": {
+            "type": "string",
+            "description": "The URL of the page.",
+            "format": "uri",
+            "readOnly": true
+          },
+          "nextPage": {
+            "type": "string",
+            "description": "If there is another page of results, the URL of the next page.",
+            "format": "uri",
+            "readOnly": true
+          },
+          "maxResults": {
+            "type": "integer",
+            "description": "The maximum number of items that could be returned.",
+            "format": "int32",
+            "readOnly": true
+          },
+          "startAt": {
+            "type": "integer",
+            "description": "The index of the first item returned.",
+            "format": "int64",
+            "readOnly": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "The number of items returned.",
+            "format": "int64",
+            "readOnly": true
+          },
+          "isLast": {
+            "type": "boolean",
+            "description": "Indicates whether this is the last page.",
+            "readOnly": true
+          },
+          "values": {
             "type": "array",
-            "description": "The list of order-by clause fields and their ordering directives.",
+            "description": "The list of items.",
+            "readOnly": true,
             "items": {
-              "$ref": "#/components/schemas/JqlQueryOrderByClauseElement"
+              "type": "string",
+              "readOnly": true
             }
           }
         },
         "additionalProperties": false,
-        "description": "Details of the order-by JQL clause."
+        "description": "A page of items."
       },
       "CustomFieldReplacement": {
         "type": "object",
@@ -29549,51 +29633,6 @@
           "number": {
             "type": "boolean"
           },
-          "valueNode": {
-            "type": "boolean"
-          },
-          "containerNode": {
-            "type": "boolean"
-          },
-          "missingNode": {
-            "type": "boolean"
-          },
-          "object": {
-            "type": "boolean"
-          },
-          "pojo": {
-            "type": "boolean"
-          },
-          "integralNumber": {
-            "type": "boolean"
-          },
-          "floatingPointNumber": {
-            "type": "boolean"
-          },
-          "int": {
-            "type": "boolean"
-          },
-          "long": {
-            "type": "boolean"
-          },
-          "double": {
-            "type": "boolean"
-          },
-          "bigDecimal": {
-            "type": "boolean"
-          },
-          "bigInteger": {
-            "type": "boolean"
-          },
-          "textual": {
-            "type": "boolean"
-          },
-          "boolean": {
-            "type": "boolean"
-          },
-          "binary": {
-            "type": "boolean"
-          },
           "numberValue": {
             "type": "number"
           },
@@ -29649,6 +29688,51 @@
             "format": "double"
           },
           "valueAsBoolean": {
+            "type": "boolean"
+          },
+          "pojo": {
+            "type": "boolean"
+          },
+          "integralNumber": {
+            "type": "boolean"
+          },
+          "int": {
+            "type": "boolean"
+          },
+          "long": {
+            "type": "boolean"
+          },
+          "double": {
+            "type": "boolean"
+          },
+          "bigDecimal": {
+            "type": "boolean"
+          },
+          "bigInteger": {
+            "type": "boolean"
+          },
+          "textual": {
+            "type": "boolean"
+          },
+          "boolean": {
+            "type": "boolean"
+          },
+          "binary": {
+            "type": "boolean"
+          },
+          "valueNode": {
+            "type": "boolean"
+          },
+          "containerNode": {
+            "type": "boolean"
+          },
+          "missingNode": {
+            "type": "boolean"
+          },
+          "object": {
+            "type": "boolean"
+          },
+          "floatingPointNumber": {
             "type": "boolean"
           },
           "array": {
@@ -30825,12 +30909,6 @@
             "format": "int64",
             "readOnly": true
           },
-          "self": {
-            "type": "string",
-            "description": "The URL for this count of the issues contained in the component.",
-            "format": "uri",
-            "readOnly": true
-          },
           "description": {
             "type": "string",
             "description": "The description for the component.",
@@ -30841,19 +30919,11 @@
             "description": "The key of the project to which the component is assigned.",
             "readOnly": true
           },
-          "projectId": {
-            "type": "integer",
-            "description": "Not used.",
-            "format": "int64",
+          "self": {
+            "type": "string",
+            "description": "The URL for this count of the issues contained in the component.",
+            "format": "uri",
             "readOnly": true
-          },
-          "assignee": {
-            "description": "The details of the user associated with `assigneeType`, if any. See `realAssignee` for details of the user assigned to issues created with this component.",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/User"
-              }
-            ]
           },
           "lead": {
             "description": "The user details for the component's lead user.",
@@ -30874,6 +30944,20 @@
               "UNASSIGNED"
             ]
           },
+          "assignee": {
+            "description": "The details of the user associated with `assigneeType`, if any. See `realAssignee` for details of the user assigned to issues created with this component.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ]
+          },
+          "projectId": {
+            "type": "integer",
+            "description": "Not used.",
+            "format": "int64",
+            "readOnly": true
+          },
           "realAssignee": {
             "description": "The user assigned to issues created with this component, when `assigneeType` does not identify a valid assignee.",
             "allOf": [
@@ -30881,6 +30965,11 @@
                 "$ref": "#/components/schemas/User"
               }
             ]
+          },
+          "isAssigneeTypeValid": {
+            "type": "boolean",
+            "description": "Indicates whether a user is associated with `assigneeType`. For example, if the `assigneeType` is set to `COMPONENT_LEAD` but the component lead is not set, then `false` is returned.",
+            "readOnly": true
           },
           "realAssigneeType": {
             "type": "string",
@@ -30892,11 +30981,6 @@
               "PROJECT_LEAD",
               "UNASSIGNED"
             ]
-          },
-          "isAssigneeTypeValid": {
-            "type": "boolean",
-            "description": "Indicates whether a user is associated with `assigneeType`. For example, if the `assigneeType` is set to `COMPONENT_LEAD` but the component lead is not set, then `false` is returned.",
-            "readOnly": true
           },
           "name": {
             "type": "string",
@@ -31073,16 +31157,6 @@
         "additionalProperties": false,
         "description": "A user found in a search."
       },
-      "ProjectRoleActorsCountBean": {
-        "type": "object",
-        "properties": {
-          "actorsCount": {
-            "type": "integer",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false
-      },
       "UserMigrationBean": {
         "type": "object",
         "properties": {
@@ -31094,6 +31168,16 @@
           },
           "accountId": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectRoleActorsCountBean": {
+        "type": "object",
+        "properties": {
+          "actorsCount": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -31179,29 +31263,6 @@
         "additionalProperties": false,
         "description": "JQL queries that contained users that could not be found"
       },
-      "AttachmentArchiveEntry": {
-        "type": "object",
-        "properties": {
-          "mediaType": {
-            "type": "string"
-          },
-          "abbreviatedName": {
-            "type": "string"
-          },
-          "entryIndex": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false
-      },
       "PageBeanNotificationScheme": {
         "type": "object",
         "properties": {
@@ -31269,6 +31330,29 @@
         },
         "additionalProperties": false,
         "description": "The identifiers for a project."
+      },
+      "AttachmentArchiveEntry": {
+        "type": "object",
+        "properties": {
+          "mediaType": {
+            "type": "string"
+          },
+          "entryIndex": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "abbreviatedName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
       },
       "JqlQueryClauseOperand": {
         "type": "object",
@@ -31384,68 +31468,6 @@
         },
         "additionalProperties": false,
         "description": "A changelog."
-      },
-      "FieldDeprecated": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The ID of the field."
-          },
-          "key": {
-            "type": "string",
-            "description": "The key of the field."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the field."
-          },
-          "custom": {
-            "type": "boolean",
-            "description": "Indicates whether the field is a custom field."
-          },
-          "orderable": {
-            "type": "boolean",
-            "description": "Indicates whether the content of the field can be used to order lists."
-          },
-          "navigable": {
-            "type": "boolean",
-            "description": "Indicates whether the field can be used as a column on the issue navigator."
-          },
-          "searchable": {
-            "type": "boolean",
-            "description": "Indicates whether the content of the field can be searched."
-          },
-          "clauseNames": {
-            "uniqueItems": true,
-            "type": "array",
-            "description": "The names that can be used to reference the field in an advanced search. For more information, see [Advanced searching - fields reference](https://confluence.atlassian.com/x/gwORLQ).",
-            "items": {
-              "type": "string"
-            }
-          },
-          "scope": {
-            "description": "The scope of the field.",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Scope"
-              }
-            ]
-          },
-          "schema": {
-            "description": "The data schema for the field.",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/JsonTypeBean"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false,
-        "description": "Details about a field. This object has been deprecated. See [Get Fields Paginated](https://developer.atlassian.com/cloud/jira/platform/rest/v3/#api-rest-api-3-field-search-get) to obtain details about fields.",
-        "xml": {
-          "name": "field"
-        }
       },
       "SharePermissionInputBean": {
         "required": [
@@ -32260,6 +32282,24 @@
         "additionalProperties": false,
         "description": "Details about the mapping between issue types and a workflow."
       },
+      "AttachmentSettings": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the ability to add attachments is enabled.",
+            "readOnly": true
+          },
+          "uploadLimit": {
+            "type": "integer",
+            "description": "The maximum size of attachments permitted, in bytes.",
+            "format": "int64",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Details of the instance's attachment settings."
+      },
       "PageBeanField": {
         "type": "object",
         "properties": {
@@ -32309,24 +32349,6 @@
         },
         "additionalProperties": false,
         "description": "A page of items."
-      },
-      "AttachmentSettings": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean",
-            "description": "Whether the ability to add attachments is enabled.",
-            "readOnly": true
-          },
-          "uploadLimit": {
-            "type": "integer",
-            "description": "The maximum size of attachments permitted, in bytes.",
-            "format": "int64",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Details of the instance's attachment settings."
       },
       "JiraExpressionsComplexityBean": {
         "type": "object",
@@ -32676,37 +32698,6 @@
           "name": "version"
         }
       },
-      "Priority": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string",
-            "description": "The URL of the issue priority."
-          },
-          "statusColor": {
-            "type": "string",
-            "description": "The color used to indicate the issue priority."
-          },
-          "description": {
-            "type": "string",
-            "description": "The description of the issue priority."
-          },
-          "iconUrl": {
-            "type": "string",
-            "description": "The URL of the icon for the issue priority."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the issue priority."
-          },
-          "id": {
-            "type": "string",
-            "description": "The ID of the issue priority."
-          }
-        },
-        "additionalProperties": true,
-        "description": "An issue priority."
-      },
       "BulkProjectPermissions": {
         "required": [
           "permissions"
@@ -32742,6 +32733,37 @@
         },
         "additionalProperties": false,
         "description": "Details of project permissions and associated issues and projects to look up."
+      },
+      "Priority": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string",
+            "description": "The URL of the issue priority."
+          },
+          "statusColor": {
+            "type": "string",
+            "description": "The color used to indicate the issue priority."
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the issue priority."
+          },
+          "iconUrl": {
+            "type": "string",
+            "description": "The URL of the icon for the issue priority."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the issue priority."
+          },
+          "id": {
+            "type": "string",
+            "description": "The ID of the issue priority."
+          }
+        },
+        "additionalProperties": true,
+        "description": "An issue priority."
       },
       "VersionIssuesStatus": {
         "type": "object",
@@ -33084,6 +33106,20 @@
         },
         "additionalProperties": false
       },
+      "IdBean": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The ID of the permission scheme to associate with the project. Use the [Get all permission schemes](#api-rest-api-3-permissionscheme-get) resource to get a list of permission scheme IDs.",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
       "PageBeanIssueFieldOption": {
         "type": "object",
         "properties": {
@@ -33133,20 +33169,6 @@
         },
         "additionalProperties": false,
         "description": "A page of items."
-      },
-      "IdBean": {
-        "required": [
-          "id"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "The ID of the permission scheme to associate with the project. Use the [Get all permission schemes](#api-rest-api-3-permissionscheme-get) resource to get a list of permission scheme IDs.",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false
       },
       "Visibility": {
         "type": "object",
