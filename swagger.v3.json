@@ -15299,7 +15299,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "READ"
       },
       "post": {
         "tags": [
@@ -15356,7 +15356,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/projectCategory/{id}": {
@@ -15409,7 +15409,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "READ"
       },
       "put": {
         "tags": [
@@ -15476,7 +15476,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -15522,7 +15522,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/projectvalidate/key": {
