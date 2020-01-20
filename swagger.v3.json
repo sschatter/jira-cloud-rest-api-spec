@@ -1968,7 +1968,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "put": {
         "tags": [
@@ -2069,7 +2069,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "post": {
         "tags": [
@@ -2169,7 +2169,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/customFieldOption/{id}": {
@@ -22138,7 +22138,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "post": {
         "tags": [
@@ -22195,7 +22195,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme/project": {
@@ -22328,7 +22328,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "put": {
         "tags": [
@@ -22399,7 +22399,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -22443,7 +22443,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme/{id}/createdraft": {
@@ -22494,7 +22494,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme/{id}/default": {
@@ -22554,7 +22554,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "put": {
         "tags": [
@@ -22621,7 +22621,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -22681,7 +22681,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme/{id}/draft": {
@@ -22732,7 +22732,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "put": {
         "tags": [
@@ -22803,7 +22803,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -22844,7 +22844,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme/{id}/draft/default": {
@@ -22895,7 +22895,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "put": {
         "tags": [
@@ -22962,7 +22962,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -23011,7 +23011,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme/{id}/draft/issuetype/{issueType}": {
@@ -23071,7 +23071,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "put": {
         "tags": [
@@ -23148,7 +23148,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -23206,7 +23206,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme/{id}/draft/workflow": {
@@ -23265,7 +23265,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "put": {
         "tags": [
@@ -23343,7 +23343,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -23393,7 +23393,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme/{id}/issuetype/{issueType}": {
@@ -23462,7 +23462,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "put": {
         "tags": [
@@ -23539,7 +23539,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -23608,7 +23608,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme/{id}/workflow": {
@@ -23676,7 +23676,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "put": {
         "tags": [
@@ -23754,7 +23754,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -23815,7 +23815,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/worklog/deleted": {
