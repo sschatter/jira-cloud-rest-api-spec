@@ -3202,7 +3202,7 @@
           },
           {}
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "READ"
       }
     },
     "/rest/api/3/expression/eval": {
@@ -4549,7 +4549,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/fieldconfigurationscheme/project": {
@@ -4625,7 +4625,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/filter": {
@@ -12010,7 +12010,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/issuetypescheme/project": {
@@ -12086,7 +12086,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/issuetypescreenscheme/mapping": {
@@ -12160,7 +12160,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/issuetypescreenscheme/project": {
@@ -12234,7 +12234,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/jql/autocompletedata": {
@@ -17946,7 +17946,7 @@
           },
           {}
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -17998,7 +17998,7 @@
           },
           {}
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/screens/{screenId}/tabs/{tabId}/fields": {
@@ -18222,7 +18222,7 @@
           },
           {}
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/screens/{screenId}/tabs/{tabId}/fields/{id}/move": {
@@ -22995,7 +22995,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "post": {
         "tags": [
@@ -23091,7 +23091,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -23168,7 +23168,7 @@
             "basicAuth": []
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/workflowscheme": {
