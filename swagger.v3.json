@@ -12563,7 +12563,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/issuetypescheme/mapping": {
@@ -12960,7 +12960,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/issuetypescheme/{issueTypeSchemeId}/issuetype": {
@@ -13227,7 +13227,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/issuetypescreenscheme": {
@@ -18755,7 +18755,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/role/{id}": {
@@ -18882,7 +18882,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "post": {
         "tags": [
@@ -18953,7 +18953,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -19014,7 +19014,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/role/{id}/actors": {
@@ -19145,7 +19145,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "delete": {
         "tags": [
@@ -19220,7 +19220,7 @@
             ]
           }
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/screens": {
@@ -20947,7 +20947,7 @@
           },
           {}
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       },
       "post": {
         "tags": [
@@ -21055,7 +21055,7 @@
           },
           {}
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/universal_avatar/type/{type}/owner/{owningObjectId}/avatar/{id}": {
@@ -21126,7 +21126,7 @@
           },
           {}
         ],
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/user": {
