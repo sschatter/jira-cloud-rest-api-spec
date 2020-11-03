@@ -14346,7 +14346,7 @@
           }
         ],
         "x-experimental": true,
-        "x-atlassian-connect-scope": "INACCESSIBLE"
+        "x-atlassian-connect-scope": "ADMIN"
       }
     },
     "/rest/api/3/jql/autocompletedata": {
